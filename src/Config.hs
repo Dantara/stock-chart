@@ -9,14 +9,16 @@ import           Data.ByteString.Lazy (ByteString)
 import qualified Data.ByteString.Lazy as BS
 import           Data.Text            (Text)
 import qualified Data.Text            as T
+import           Error
 import           GHC.Generics
+import           Internal
 
-data DefaultConfig = DefaultConfig {
-    apiKey        :: Text
-  , defaultTicker :: Text
-  } deriving (Show, Generic, FromJSON)
+data Config = Config {
+    apiKey :: Text
+  , ticker :: Text
+  } deriving (Show, Generic, FromJSON, ToJSON)
 
-readConfig :: String -> IO (Maybe DefaultConfig)
+readConfig :: String -> IO (Either Error Config)
 readConfig str = do
   x <- BS.readFile str
-  return $ decode x
+  return $ maybeToEither ConfigError $ decode x
