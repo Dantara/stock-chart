@@ -22,3 +22,8 @@ readConfig :: String -> IO (Either Error Config)
 readConfig str = do
   x <- BS.readFile str
   return $ maybeToEither ConfigError $ decode x
+
+genConfig :: String -> IO ()
+genConfig str = BS.writeFile str $ encode defaultConfig
+  where
+    defaultConfig = Config "YOUR_API_KEY" "APPL"
