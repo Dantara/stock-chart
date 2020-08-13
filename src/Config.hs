@@ -4,6 +4,7 @@
 
 module Config where
 
+import           Control.Monad.Except
 import           Data.Aeson
 import           Data.ByteString.Lazy (ByteString)
 import qualified Data.ByteString.Lazy as BS

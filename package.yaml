@@ -28,6 +28,8 @@ dependencies:
 - mtl
 - aeson
 - bytestring
+- wreq
+- lens
 
 library:
   source-dirs: src

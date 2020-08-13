@@ -2,4 +2,8 @@
 
 module Error where
 
-data Error = ConfigError | ConnectionError deriving (Show)
+data Error = ConfigError
+           | ConnectionError
+           | RequestError
+           | UpdateError
+           deriving (Show)
