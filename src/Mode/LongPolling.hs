@@ -62,11 +62,11 @@ runQuoteLP cfg f tic = go [0]
           let x = currentPrice quote
           clearScreen
           f $ reverse (x:xs)
-          putStrLn $ "\nCurrent price: " <> show x <> "\n"
-          putStrLn $ "High price: " <> show (highPrice quote)
-          putStrLn $ "Low price: " <> show (lowPrice quote)
-          putStrLn $ "Open price: " <> show (openPrice quote)
-          putStrLn $ "Previous close price: " <> show (previousClosePrice quote)
+          putStrLn $ "\nCurrent price: " <> show x <> "$\n"
+          putStrLn $ "High price: " <> show (highPrice quote) <> "$"
+          putStrLn $ "Low price: " <> show (lowPrice quote) <> "$"
+          putStrLn $ "Open price: " <> show (openPrice quote) <> "$"
+          putStrLn $ "Previous close price: " <> show (previousClosePrice quote) <> "$"
           threadDelay tic
           go (x:xs)
         (Left e) -> print e
