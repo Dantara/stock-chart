@@ -9,7 +9,7 @@ import           Control.Concurrent
 import           Control.Lens
 import           Data.Aeson
 import           Data.ByteString.Lazy (ByteString)
-import           Data.Text            hiding (reverse)
+import qualified Data.Text            as T
 import           Data.Text.Encoding
 import           Error
 import           GHC.Generics
@@ -49,7 +49,7 @@ getUpdate cfg = do
     (Right r) -> return $ maybeToEither UpdateError $ decode r
     (Left e)  -> return (Left e)
   where
-    url = apiUrl <> "quote?symbol=" <> unpack (ticker cfg)
+    url = apiUrl <> "quote?symbol=" <> T.unpack (ticker cfg)
 
 runQuoteLP :: Config -> ([Double] -> IO ()) -> Int -> IO ()
 runQuoteLP cfg f tic = go [0]
