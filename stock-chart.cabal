@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 1abc55f8d622b2aad337a1264ff598f4939c18bee3e9340d12ce5ea045ce2521
+-- hash: bd953471a9b2a8f5a1f1f3fc7999a4f7831df5d5b503626cb55200b0d8a91647
 
 name:           stock-chart
 version:        0.1.0.0
@@ -28,7 +28,11 @@ source-repository head
 library
   exposed-modules:
       Config
+      Error
+      Internal
       Lib
+      Mode
+      Mode.LongPolling
   other-modules:
       Paths_stock_chart
   hs-source-dirs:
@@ -39,9 +43,11 @@ library
     , asciichart
     , base >=4.7 && <5
     , bytestring
+    , lens
     , mtl
     , text
     , websockets
+    , wreq
   default-language: Haskell2010
 
 executable stock-chart-exe
@@ -57,10 +63,12 @@ executable stock-chart-exe
     , asciichart
     , base >=4.7 && <5
     , bytestring
+    , lens
     , mtl
     , stock-chart
     , text
     , websockets
+    , wreq
   default-language: Haskell2010
 
 test-suite stock-chart-test
@@ -77,8 +85,10 @@ test-suite stock-chart-test
     , asciichart
     , base >=4.7 && <5
     , bytestring
+    , lens
     , mtl
     , stock-chart
     , text
     , websockets
+    , wreq
   default-language: Haskell2010
