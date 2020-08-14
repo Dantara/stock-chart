@@ -3,27 +3,25 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 module Lib
-    ( someFunc
+    ( runQuote
     ) where
 
+import           Config
 import           Control.Concurrent
 import           Data.Aeson
 import           Data.Text           (Text)
 import qualified Data.Text           as T
 import           Data.Text.Chart     (plot)
+import           Error
 import           GHC.Generics
+import           Internal
+import           Mode.LongPolling
 import           System.Console.ANSI
 
-myLoop :: IO ()
-myLoop = do
-  clearScreen
-  plot $ [1..20] <> [20,19..10]
-  putStrLn "Current price: 5000"
-  threadDelay 1000000
-  clearScreen
-  plot $ [1..20] <> [20,19..10] <> [10..30]
-  threadDelay 1000000
-
-someFunc :: IO ()
--- someFunc = sequence_ $ repeat myLoop
-someFunc = return ()
+runQuote :: IO ()
+runQuote = do
+  configE <- readConfig "config.json"
+  case configE of
+    (Right cfg) ->
+      runQuoteLP cfg realPlot 1500000
+    (Left e) -> print e

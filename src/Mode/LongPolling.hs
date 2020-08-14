@@ -5,30 +5,32 @@
 module Mode.LongPolling where
 
 import           Config
+import           Control.Concurrent
 import           Control.Lens
 import           Data.Aeson
 import           Data.ByteString.Lazy (ByteString)
-import qualified Data.ByteString.Lazy as BS
-import           Data.Text
+import           Data.Text            hiding (reverse)
 import           Data.Text.Encoding
-import           Debug.Trace
 import           Error
 import           GHC.Generics
 import           Internal
 import           Network.Wreq
+import           System.Console.ANSI
 
 data Quote = Quote {
-    openPrice          :: Double
+    currentPrice       :: Double
   , highPrice          :: Double
-  , currentPrice       :: Double
+  , lowPrice           :: Double
+  , openPrice          :: Double
   , previousClosePrice :: Double
   } deriving (Show, Generic)
 
 instance FromJSON Quote where
   parseJSON = withObject "Quote" $ \v -> Quote
-        <$> v .: "o"
+        <$> v .: "c"
         <*> v .: "h"
-        <*> v .: "c"
+        <*> v .: "l"
+        <*> v .: "o"
         <*> v .: "pc"
 
 sendRequest :: String -> Config -> IO (Either Error ByteString)
@@ -48,3 +50,23 @@ getUpdate cfg = do
     (Left e)  -> return (Left e)
   where
     url = apiUrl <> "quote?symbol=" <> unpack (ticker cfg)
+
+runQuoteLP :: Config -> ([Double] -> IO ()) -> Int -> IO ()
+runQuoteLP cfg f tic = go [0]
+  where
+    go :: [Double] -> IO ()
+    go xs = do
+      upd <- getUpdate cfg
+      case upd of
+        (Right quote) -> do
+          let x = currentPrice quote
+          clearScreen
+          f $ reverse (x:xs)
+          putStrLn $ "\nCurrent price: " <> show x <> "\n"
+          putStrLn $ "High price: " <> show (highPrice quote)
+          putStrLn $ "Low price: " <> show (lowPrice quote)
+          putStrLn $ "Open price: " <> show (openPrice quote)
+          putStrLn $ "Previous close price: " <> show (previousClosePrice quote)
+          threadDelay tic
+          go (x:xs)
+        (Left e) -> print e
