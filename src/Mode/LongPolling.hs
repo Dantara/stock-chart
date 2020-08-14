@@ -61,6 +61,7 @@ runQuoteLP cfg f tic = go [0]
         (Right quote) -> do
           let x = currentPrice quote
           clearScreen
+          putStrLn $ "Data for " <> show (ticker cfg) <> " ticker:\n"
           f $ reverse (x:xs)
           putStrLn $ "\nCurrent price: " <> show x <> "$\n"
           putStrLn $ "High price: " <> show (highPrice quote) <> "$"
